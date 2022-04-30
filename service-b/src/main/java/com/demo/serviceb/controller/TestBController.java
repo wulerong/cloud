@@ -1,6 +1,7 @@
 package com.demo.serviceb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +16,12 @@ public class TestBController {
 
     @Autowired
     private ServiceAFeignClient serviceAFeignClient;
+    @Value("${server.port}")
+    private String port;
 
     @RequestMapping("call")
     public String call(){
         String result = serviceAFeignClient.TestAController();
-        return "b to a 访问结果 ---" + result;
+        return port+"b to a 访问结果 ---" + result;
     }
 }

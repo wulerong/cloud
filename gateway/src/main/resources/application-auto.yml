@@ -1,0 +1,19 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /${spring.application.name}
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka

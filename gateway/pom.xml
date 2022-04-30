@@ -28,6 +28,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -50,4 +56,22 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>auto</id>
+            <activation>
+                <!--  默认激活-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env>auto</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>manual</id>
+            <properties>
+                <env>manual</env>
+            </properties>
+        </profile>
+    </profiles>
 </project>

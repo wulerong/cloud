@@ -1,0 +1,44 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /${spring.application.name}
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      # 路由数组：指当请求满足什么样的断言时，转发到哪个服务上
+      routes:
+        # 路由标识，要求唯一，名称任意
+        - id: gateway-servicea
+          # 请求最终被转发到的目标地址
+          uri: lb://SERVICE-OBJCAT-A
+          # 设置断言
+          predicates:
+            # Path Route Predicate Factory 断言，满足 /gateway/provider/** 路径的请求都会被路由到 http://localhost:9024 这个uri中
+            - Path=/gateway/servicea/**
+            # Weight Route Predicate Factory 断言，同一分组按照权重进行分配流量，这里分配了80%
+            # 第一个group1是分组名，第二个参数是权重
+            - Weight=group1, 10
+          # 配置过滤器（局部）
+          filters:
+            # StripPrefix：去除原始请求路径中的前1级路径，即/gateway
+            - StripPrefix=2
+
+        - id: gateway-serviceb
+          uri: lb://SERVICE-OBJCAT-B
+          # 设置断言
+          predicates:
+            - Path=/gateway/serviceb/**
+            # Weight Route Predicate Factory，同一分组按照权重进行分配流量，这里分配了20%
+            - Weight=group2, 10
+          # 配置过滤器（局部）
+          filters:
+            # StripPrefix：去除原始请求路径中的前1级路径，即/gateway
+            - StripPrefix=2
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
