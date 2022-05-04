@@ -1,3 +1,15 @@
 spring:
   profiles:
     active: @env@
+
+info:
+  app.name: springcloud-service-news
+  company.name: www.mark.com
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

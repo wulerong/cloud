@@ -1,17 +1,14 @@
 package com.demo.serviceb.controller;
 
+import com.demo.serviceb.service.ServiceAFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
-// 添加注解声明是注册中心客户端
-@EnableEurekaClient
-// 实现不同子服务调用
-@EnableFeignClients
 public class TestBController {
 
     @Autowired
@@ -19,9 +16,26 @@ public class TestBController {
     @Value("${server.port}")
     private String port;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @RequestMapping("call")
     public String call(){
         String result = serviceAFeignClient.TestAController();
         return port+"b to a 访问结果 ---" + result;
+    }
+
+    @RequestMapping("test")
+    public String test(){
+        String url = "http://SERVICE-OBJCAT-A/testA";
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
+        return port+"b to a 访问结果 ---" + forEntity.getBody();
+    }
+
+    @RequestMapping("testb")
+    public String testb(){
+        String url = "http://SERVICE-OBJCAT-B/test";
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
+        return forEntity.getBody();
     }
 }
